@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+#
+beautyai.db
+.venv/
+__pycache__/

@@ -1,8 +1,12 @@
 from fastapi import FastAPI
+from app.database.database import engine, Base
+from app.models.business import Business
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="BeautyAI",
-    description="AI-powered business assistant for small businesses",
+    description="AI-powered business assistant platform for small businesses",
     version="1.0.0"
 )
 
