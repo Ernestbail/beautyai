@@ -1,36 +1,38 @@
 from fastapi import FastAPI
 
-from app.database.database import engine, Base
+from app.api import businesses
+from app.api import auth
 
-# Import models so tables are created
-from app.models.business import Business
-from app.models.user import User
+from app.database.database import engine
+from app.database.database import Base
 
-# Import API routers
-from app.api.businesses import router as business_router
-from app.api.auth import router as auth_router
+from app.models import user
+from app.models import business
 
 
-# Create database tables
 Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI(
     title="BeautyAI",
-    description="AI-powered business assistant platform for small businesses",
-    version="1.0.0"
+    description="AI-powered business assistant platform for small businesses"
 )
 
 
-# Register API routes
-app.include_router(business_router)
-app.include_router(auth_router)
+app.include_router(
+    businesses.router
+)
+
+
+app.include_router(
+    auth.router
+)
 
 
 @app.get("/")
 def home():
     return {
-        "message": "Welcome to BeautyAI"
+        "message": "BeautyAI API running"
     }
 
 

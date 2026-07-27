@@ -48,4 +48,3 @@ class Business(Base):
     user = relationship(
         "User",
         back_populates="businesses"
-    )

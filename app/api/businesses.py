@@ -1,3 +1,5 @@
+from app.auth.security import get_current_user
+from app.models.user import User
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -35,10 +37,11 @@ def create_business(
 
     return new_business
 
-
 @router.get("/", response_model=list[BusinessResponse])
 def get_businesses(
     db: Session = Depends(get_db)
 ):
 
-    return db.query(Business).all()
+    businesses = db.query(Business).all()
+
+    return businesses
