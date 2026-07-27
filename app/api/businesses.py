@@ -1,11 +1,11 @@
-from app.auth.security import get_current_user
-from app.models.user import User
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.models.business import Business
 from app.schemas.business import BusinessCreate, BusinessResponse
+from app.auth.dependencies import get_current_user
+from app.models.user import User
 
 
 router = APIRouter(
@@ -14,10 +14,25 @@ router = APIRouter(
 )
 
 
+@router.get("/", response_model=list[BusinessResponse])
+def get_businesses(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    businesses = db.query(Business).filter(
+        Business.user_id == current_user.id
+    ).all()
+
+    return businesses
+
+
+
 @router.post("/", response_model=BusinessResponse)
 def create_business(
     business: BusinessCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
 
     new_business = Business(
@@ -28,7 +43,7 @@ def create_business(
         booking_link=business.booking_link,
         hours=business.hours,
         policies=business.policies,
-        user_id=business.user_id
+        user_id=current_user.id
     )
 
     db.add(new_business)
@@ -36,12 +51,3 @@ def create_business(
     db.refresh(new_business)
 
     return new_business
-
-@router.get("/", response_model=list[BusinessResponse])
-def get_businesses(
-    db: Session = Depends(get_db)
-):
-
-    businesses = db.query(Business).all()
-
-    return businesses
