@@ -18,7 +18,16 @@ def create_business(
     db: Session = Depends(get_db)
 ):
 
-    new_business = Business(**business.model_dump())
+    new_business = Business(
+        name=business.name,
+        owner=business.owner,
+        email=business.email,
+        website=business.website,
+        booking_link=business.booking_link,
+        hours=business.hours,
+        policies=business.policies,
+        user_id=business.user_id
+    )
 
     db.add(new_business)
     db.commit()

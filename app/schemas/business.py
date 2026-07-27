@@ -9,6 +9,7 @@ class BusinessCreate(BaseModel):
     booking_link: str
     hours: str
     policies: str
+    user_id: int
 
 
 class BusinessResponse(BusinessCreate):
