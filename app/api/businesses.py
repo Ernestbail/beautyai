@@ -120,3 +120,30 @@ def update_business(
     db.refresh(business)
 
     return business
+# Delete a business
+@router.delete(
+    "/{business_id}"
+)
+def delete_business(
+    business_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    business = db.query(Business).filter(
+        Business.id == business_id,
+        Business.user_id == current_user.id
+    ).first()
+
+    if business is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Business not found"
+        )
+
+    db.delete(business)
+    db.commit()
+
+    return {
+        "message": "Business deleted successfully"
+    }
