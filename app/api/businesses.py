@@ -83,3 +83,40 @@ def create_business(
     db.refresh(new_business)
 
     return new_business
+
+
+# Update a business
+@router.put(
+    "/{business_id}",
+    response_model=BusinessResponse
+)
+def update_business(
+    business_id: int,
+    business_data: BusinessCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    business = db.query(Business).filter(
+        Business.id == business_id,
+        Business.user_id == current_user.id
+    ).first()
+
+    if business is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Business not found"
+        )
+
+    business.name = business_data.name
+    business.owner = business_data.owner
+    business.email = business_data.email
+    business.website = business_data.website
+    business.booking_link = business_data.booking_link
+    business.hours = business_data.hours
+    business.policies = business_data.policies
+
+    db.commit()
+    db.refresh(business)
+
+    return business
