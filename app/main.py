@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.api import businesses
 from app.api import auth
+from app.api import dashboard
 
 from app.database.database import engine
 from app.database.database import Base
@@ -26,6 +27,11 @@ app.include_router(
 
 app.include_router(
     auth.router
+)
+
+
+app.include_router(
+    dashboard.router
 )
 
 
