@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
@@ -13,6 +13,7 @@ router = APIRouter(
 )
 
 
+# Dashboard overview
 @router.get("/")
 def get_dashboard(
     db: Session = Depends(get_db),
@@ -41,4 +42,33 @@ def get_dashboard(
             }
             for business in businesses
         ]
+    }
+
+
+# Get the logged-in user's business
+@router.get("/business")
+def get_dashboard_business(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    business = db.query(Business).filter(
+        Business.user_id == current_user.id
+    ).first()
+
+    if business is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Business not found"
+        )
+
+    return {
+        "id": business.id,
+        "name": business.name,
+        "owner": business.owner,
+        "email": business.email,
+        "website": business.website,
+        "booking_link": business.booking_link,
+        "hours": business.hours,
+        "policies": business.policies
     }
