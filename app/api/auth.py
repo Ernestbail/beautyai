@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 from app.database.database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
+from app.auth.dependencies import get_current_user
 
 
 router = APIRouter(
@@ -81,13 +82,11 @@ def login_user(
         User.email == form_data.username
     ).first()
 
-
     if not user:
         raise HTTPException(
             status_code=401,
             detail="Invalid email or password"
         )
-
 
     if not verify_password(
         form_data.password,
@@ -98,7 +97,6 @@ def login_user(
             detail="Invalid email or password"
         )
 
-
     token = create_access_token(
         {
             "user_id": user.id,
@@ -106,8 +104,19 @@ def login_user(
         }
     )
 
-
     return {
         "access_token": token,
         "token_type": "bearer"
     }
+
+
+# Get currently logged-in user
+@router.get(
+    "/me",
+    response_model=UserResponse
+)
+def get_my_profile(
+    current_user: User = Depends(get_current_user)
+):
+
+    return current_user
