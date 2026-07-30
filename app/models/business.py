@@ -15,28 +15,32 @@ class Business(Base):
 
     name = Column(
         String,
-        index=True,
-        nullable=False
+        index=True
     )
 
     owner = Column(
-        String,
-        nullable=False
+        String
     )
 
     email = Column(
-        String,
-        nullable=False
+        String
     )
 
-    website = Column(String)
+    website = Column(
+        String
+    )
 
-    booking_link = Column(String)
+    booking_link = Column(
+        String
+    )
 
-    hours = Column(String)
+    hours = Column(
+        String
+    )
 
-    policies = Column(String)
-
+    policies = Column(
+        String
+    )
 
     user_id = Column(
         Integer,
@@ -44,8 +48,15 @@ class Business(Base):
         nullable=False
     )
 
-
+    # Connect business to user
     user = relationship(
         "User",
         back_populates="businesses"
+    )
+
+    # Connect business to services
+    services = relationship(
+        "Service",
+        back_populates="business",
+        cascade="all, delete-orphan"
     )
