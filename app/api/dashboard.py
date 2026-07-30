@@ -38,7 +38,18 @@ def get_dashboard(
                 "website": business.website,
                 "booking_link": business.booking_link,
                 "hours": business.hours,
-                "policies": business.policies
+                "policies": business.policies,
+
+                "services": [
+                    {
+                        "id": service.id,
+                        "name": service.name,
+                        "description": service.description,
+                        "price": service.price,
+                        "duration": service.duration
+                    }
+                    for service in business.services
+                ]
             }
             for business in businesses
         ]
@@ -70,5 +81,16 @@ def get_dashboard_business(
         "website": business.website,
         "booking_link": business.booking_link,
         "hours": business.hours,
-        "policies": business.policies
+        "policies": business.policies,
+
+        "services": [
+            {
+                "id": service.id,
+                "name": service.name,
+                "description": service.description,
+                "price": service.price,
+                "duration": service.duration
+            }
+            for service in business.services
+        ]
     }
