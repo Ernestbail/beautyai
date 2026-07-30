@@ -39,7 +39,15 @@ class Customer(Base):
         nullable=True
     )
 
+    # Connect customer to business
     business = relationship(
         "Business",
         back_populates="customers"
+    )
+
+    # Connect customer to appointments
+    appointments = relationship(
+        "Appointment",
+        back_populates="customer",
+        cascade="all, delete-orphan"
     )

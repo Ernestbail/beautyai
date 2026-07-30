@@ -67,3 +67,10 @@ class Business(Base):
         back_populates="business",
         cascade="all, delete-orphan"
     )
+
+    # Connect business to appointments
+    appointments = relationship(
+        "Appointment",
+        back_populates="business",
+        cascade="all, delete-orphan"
+    )

@@ -39,7 +39,15 @@ class Service(Base):
         nullable=False
     )
 
+    # Connect service to business
     business = relationship(
         "Business",
         back_populates="services"
+    )
+
+    # Connect service to appointments
+    appointments = relationship(
+        "Appointment",
+        back_populates="service",
+        cascade="all, delete-orphan"
     )
